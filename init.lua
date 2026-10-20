@@ -65,8 +65,11 @@ rex.bind("ctrl+x>ctrl+=", "client.font.increase")
 rex.bind("ctrl+x>ctrl+-", "client.font.decrease")
 rex.bind("ctrl+x>ctrl+0", "client.font.reset")
 
--- C-x C-g keyboard-quit: cancel the sequence and send nothing.
-rex.bind("ctrl+x>ctrl+g", function() return true end)
+-- C-g keyboard-quit: cancel a sequence partway and send nothing.
+local function quit() return true end
+rex.bind("ctrl+x>ctrl+g", quit)
+rex.bind("ctrl+x>t>ctrl+g", quit)
+rex.bind("ctrl+x>5>ctrl+g", quit)
 
 -- C-x C-x sends a literal C-x, like tmux's prefix-prefix.
 rex.bind("ctrl+x>ctrl+x", "pane.send_key", { key = "ctrl+x" })

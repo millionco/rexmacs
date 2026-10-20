@@ -54,7 +54,7 @@ If you already have an `init.lua`, save this one beside it as `rexmacs.lua` and 
 | `C-x C-+` / `C-x C-=` | text-scale-increase | Increase font size |
 | `C-x C--` | text-scale-decrease | Decrease font size |
 | `C-x C-0` | text-scale-adjust 0 | Reset font size |
-| `C-x C-g` | keyboard-quit | Cancel the sequence |
+| `C-x C-g`, `C-x t C-g`, `C-x 5 C-g` | keyboard-quit | Cancel the sequence |
 
 ## The terminal still gets C-x
 
@@ -65,11 +65,11 @@ Rex treats `C-x` as the start of a sequence, so on its own it no longer reaches 
 
 `C-x k` (kill-buffer) is deliberately left out, because closing a Rex session ends every process in it. `C-x k` passes through to the terminal like any other unclaimed key.
 
-## Ctrl+M as Return in the command palette
+## Ctrl+M and Ctrl+G in the command palette
 
-In the terminal, `C-m` already works as Return, because it sends the same character. In Rex's own text fields, like the command palette and the session switcher, it does nothing but beep: those are standard macOS text fields, and macOS doesn't bind Ctrl+M.
+In Emacs, `C-m` is Return and `C-g` cancels. In the terminal, `C-m` already works as Return, because it sends the same character, and `C-g` reaches the program running there. In Rex's own text fields, like the command palette and the session switcher, both just beep: those are standard macOS text fields, and macOS binds neither key.
 
-Rex's shortcuts can't fix this, because they apply everywhere, not just in the palette. Instead, tell macOS's text system that Ctrl+M means Return.
+Rex's shortcuts can't fix this, because they apply everywhere, not just in the palette. A global `C-g` binding would also take the key away from Emacs and other programs in the terminal. Instead, tell macOS's text system that Ctrl+M means Return and Ctrl+G means Escape.
 
 1. Create the file `~/Library/KeyBindings/DefaultKeyBinding.dict`:
 
@@ -78,11 +78,12 @@ Rex's shortcuts can't fix this, because they apply everywhere, not just in the p
    cat > ~/Library/KeyBindings/DefaultKeyBinding.dict <<'EOF'
    {
        "^m" = "insertNewline:";
+       "^g" = "cancelOperation:";
    }
    EOF
    ```
 
-   If you already have this file, add the `"^m"` line inside its braces instead of overwriting it.
+   If you already have this file, add the two lines inside its braces instead of overwriting it.
 
 2. Check the file is valid:
 
@@ -96,7 +97,7 @@ Rex's shortcuts can't fix this, because they apply everywhere, not just in the p
    osascript -e 'quit app "Rex Beta"' && sleep 1 && open -a "Rex Beta"
    ```
 
-The binding applies to every Mac app that uses the standard text system, not just Rex. Ctrl+M submits a single-line field and starts a new line in a text editor. Chromium and Electron apps draw their own text fields and ignore the file. To undo it, delete the file and relaunch the app.
+The bindings apply to every Mac app that uses the standard text system, not just Rex. Ctrl+M submits a single-line field and starts a new line in a text editor. Ctrl+G does whatever Escape does there, such as closing the palette or cancelling a dialog. Chromium and Electron apps draw their own text fields and ignore the file. To undo it, delete the file and relaunch the app.
 
 If you manage your Mac with Home Manager, declare the file instead:
 
@@ -104,6 +105,7 @@ If you manage your Mac with Home Manager, declare the file instead:
 home.file."Library/KeyBindings/DefaultKeyBinding.dict".text = ''
   {
       "^m" = "insertNewline:";
+      "^g" = "cancelOperation:";
   }
 '';
 ```
