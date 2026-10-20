@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="assets/banner.png" alt="The Rex T-rex chasing the Emacs logo" width="800">
+</p>
+
 # rexmacs
 
 Emacs default key bindings for [Rex](https://superlogical.com/rex), the terminal and multiplexer from Superlogical.
