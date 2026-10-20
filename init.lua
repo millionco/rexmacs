@@ -23,8 +23,9 @@ rex.action{
   end,
 }
 
--- M-x execute-extended-command
+-- M-x execute-extended-command, with Option or Command as Meta
 rex.bind("alt+x", "client.palette.toggle")
+rex.bind("cmd+x", "client.palette.toggle")
 
 -- Windows (panes)
 rex.bind("ctrl+x>2", "pane.split", { direction = "down" })  -- split-window-below

@@ -25,7 +25,7 @@ If you already have an `init.lua`, save this one beside it as `rexmacs.lua` and 
 
 | Keys | Emacs command | Rex action |
 | --- | --- | --- |
-| `M-x` | execute-extended-command | Command palette |
+| `M-x` / `Cmd-x` | execute-extended-command | Command palette |
 | `C-x 2` | split-window-below | Split pane down |
 | `C-x 3` | split-window-right | Split pane right |
 | `C-x 0` | delete-window | Close pane |
