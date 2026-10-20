@@ -61,6 +61,49 @@ Rex treats `C-x` as the start of a sequence, so on its own it no longer reaches 
 
 `C-x k` (kill-buffer) is deliberately left out, because closing a Rex session ends every process in it. `C-x k` passes through to the terminal like any other unclaimed key.
 
+## Ctrl+M as Return in the command palette
+
+In the terminal, `C-m` already works as Return, because it sends the same character. In Rex's own text fields, like the command palette and the session switcher, it does nothing but beep: those are standard macOS text fields, and macOS doesn't bind Ctrl+M.
+
+Rex's shortcuts can't fix this, because they apply everywhere, not just in the palette. Instead, tell macOS's text system that Ctrl+M means Return.
+
+1. Create the file `~/Library/KeyBindings/DefaultKeyBinding.dict`:
+
+   ```sh
+   mkdir -p ~/Library/KeyBindings
+   cat > ~/Library/KeyBindings/DefaultKeyBinding.dict <<'EOF'
+   {
+       "^m" = "insertNewline:";
+   }
+   EOF
+   ```
+
+   If you already have this file, add the `"^m"` line inside its braces instead of overwriting it.
+
+2. Check the file is valid:
+
+   ```sh
+   plutil -lint ~/Library/KeyBindings/DefaultKeyBinding.dict
+   ```
+
+3. Quit Rex and open it again. Apps read this file only when they launch. Your sessions survive: they run in Rex Server, which keeps going when the window app quits. Do this from another terminal, such as Terminal.app, rather than from inside Rex:
+
+   ```sh
+   osascript -e 'quit app "Rex Beta"' && sleep 1 && open -a "Rex Beta"
+   ```
+
+The binding applies to every Mac app that uses the standard text system, not just Rex. Ctrl+M submits a single-line field and starts a new line in a text editor. Chromium and Electron apps draw their own text fields and ignore the file. To undo it, delete the file and relaunch the app.
+
+If you manage your Mac with Home Manager, declare the file instead:
+
+```nix
+home.file."Library/KeyBindings/DefaultKeyBinding.dict".text = ''
+  {
+      "^m" = "insertNewline:";
+  }
+'';
+```
+
 ## Meta
 
 For `M-f`, `M-b`, `M-d` and the rest to reach the shell, open Rex's Settings, search for "Option Key Behavior", and make Option act as Alt (both keys, or only the left one if you type accented characters with the right).
