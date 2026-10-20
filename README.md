@@ -4,7 +4,7 @@
 
 # rexmacs
 
-Emacs default key bindings for [Rex](https://superlogical.com/), the terminal and multiplexer from Superlogical.
+Emacs default key bindings for [Rex](https://www.superlogical.com/updates/public-testing-beginning), the terminal and multiplexer from Superlogical.
 
 Rex has no built-in Emacs preset, so `init.lua` binds Emacs's default window, tab, frame and buffer keys to Rex's actions:
 
